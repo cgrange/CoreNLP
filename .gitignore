@@ -4,5 +4,6 @@
 *.swo
 *.o
 *.so
+*.jar
 .DS_Store
 .settings/**

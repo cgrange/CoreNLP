@@ -1,2 +1,3 @@
-*
-!.gitignore
+/edu/
+/DocumentSentimentAnalysis.class
+/nike_tweet.txt
