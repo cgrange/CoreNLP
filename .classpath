@@ -54,5 +54,6 @@
 	<classpathentry kind="lib" path="libsrc/slf4j-api-1.7.12-sources.jar"/>
 	<classpathentry kind="lib" path="libsrc/xom-1.2.10-src.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
