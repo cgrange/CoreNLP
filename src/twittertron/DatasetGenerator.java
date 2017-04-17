@@ -24,6 +24,7 @@ public class DatasetGenerator {
 	static PrintWriter out = new PrintWriter(System.out);
 	static PrintWriter instancesFile;
 	static PrintWriter pagesFile;
+	static DocumentSentimentAnalysis dsa;
 	
 	private static String getPage(int pageNum) throws IOException{
 		String query = String.format("page=%s", URLEncoder.encode(String.valueOf(pageNum), charset));
@@ -57,10 +58,9 @@ public class DatasetGenerator {
 	}
 	
 	private static JsonObject getLabel(Set<String> companies, JsonObject userObj){
-		System.out.println("entered getlabel");
 		JsonObject label = null;
 		try {
-			label = DocumentSentimentAnalysis.getLabel(companies, getFollowingMap(userObj, companies));
+			label = dsa.getLabel(companies, getFollowingMap(userObj, companies));
 			//System.out.println(label.toString());
 		} catch (IOException e) {
 			//System.out.println("GOT HEEM! line 62 of dataset Generator");
@@ -104,15 +104,13 @@ public class DatasetGenerator {
 		return instances;
 	}
 	
-	private JsonArray generateDataset(){
-		
-		return null;
-	}
-	
 	public static void main(String[] args){
+		dsa = new DocumentSentimentAnalysis();
 		try {
 			instancesFile = new PrintWriter("instances.txt");
-			pagesFile = new PrintWriter("pages.txt");
+			instancesFile.print("[ ");
+//			pagesFile = new PrintWriter("pages.txt");
+//			pagesFile.print("testing 1, 2");
 		} catch (FileNotFoundException e1) {
 			System.out.println("NO!!! the instances.txt file could not open");
 			e1.printStackTrace();
@@ -124,14 +122,39 @@ public class DatasetGenerator {
 		}
 		try {
 			int page = 0;
-			while(true){
+			int numPages = 100;
+			while(page < numPages){
+				if(page == 3){
+					page = 4;
+				}
 				JsonArray instances = new JsonArray();
+				
+				/*
+				
+				For Java, you can call `java.util.concurrent.Threadpools.newFixedThreadpool(...)`
+				and then submit as many `java.util.concurrent.Future`s to it as you want concurrent threads. 
+				Inside of each `Future` you make the HTTP call and `.add` the result to a 
+				`java.util.concurrent.ConcurrentHashMap` with the key as the page number
+				Should work nicely
+				 
+				 */
 				String pageStr = getPage(page);
+				
 				instances = pageToInstances(pageStr, companies);
-				instancesFile.print(instances.toString());
-				pagesFile.println("finished page " + page);
+				for(int i = 0; i < instances.size(); i++){
+					JsonObject instance = instances.get(i).getAsJsonObject();
+					instancesFile.print(instance.toString());
+					if(i == instances.size()-1 && page == numPages-1){
+						//don't print comma
+						break;
+					}
+					else{
+						instancesFile.print(", ");
+					}
+				}
 				page++;
-			}			
+			}	
+			instancesFile.print(" ] ");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

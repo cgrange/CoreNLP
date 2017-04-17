@@ -13,11 +13,18 @@ import edu.stanford.nlp.util.*;
 
 /** This class demonstrates building and using a Stanford CoreNLP pipeline. */
 public class DocumentSentimentAnalysis {
+	
+	//StanfordCoreNLP pipeline;
+	
+//	public DocumentSentimentAnalysis(){
+//		Properties props = new Properties();
+//		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment");
+//		
+//		pipeline = new StanfordCoreNLP(props);
+//	}
 
 	public static JsonObject getLabel(Set<String> companies, Map<String, Boolean> followingMap) throws IOException {
 		JsonObject label = new JsonObject();
-		PrintWriter out = new PrintWriter(System.out);
-		
 		Properties props = new Properties();
 		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment");
 		
